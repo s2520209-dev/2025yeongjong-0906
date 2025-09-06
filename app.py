@@ -13,7 +13,7 @@ st.write("이 데이터는 시설별, 시도별 자원봉사자 현황을 보여
 try:
     # 깃허브 원시 파일 URL로 경로 수정
     # 자신의 깃허브 저장소 URL로 바꿔주세요!
-    file_path = 'https://raw.githubusercontent.com/사용자이름/저장소이름/브랜치이름/data.csv'
+    file_path = 'https://raw.githubusercontent.com/your-username/your-repository/main/data.csv'
     
     # 데이터가 3번째 행(index 2)부터 시작하므로 header=2로 지정합니다.
     df = pd.read_csv(file_path, encoding='cp949', header=2)
@@ -23,9 +23,10 @@ try:
     
     st.dataframe(df)
 
-except FileNotFoundError:
-    st.error(f"파일을 찾을 수 없습니다: {file_path}")
-    st.write("`data.csv` 파일을 스크립트와 같은 폴더에 저장해주세요.")
+except Exception as e:
+    st.error("파일을 불러오는 중 오류가 발생했습니다.")
+    st.write(f"오류 내용: {e}")
+    st.write("GitHub 저장소의 **사용자 이름**, **저장소 이름**, **브랜치 이름**이 정확한지 확인해주세요.")
     st.stop()
 
 
