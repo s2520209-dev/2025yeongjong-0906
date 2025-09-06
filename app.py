@@ -5,22 +5,24 @@ import os
 
 # 1. 페이지 제목 및 소개
 st.title('자원봉사자 현황 대시보드')
-st.markdown("### 보건복지부의 자원봉사자 통계를 시각화합니다.")
-st.write("이 데이터는 2024년 기준 시설별, 시도별 자원봉사자 현황을 보여줍니다.")
+st.markdown("### 2024년 보건복지부의 자원봉사자 통계를 시각화합니다.")
+st.write("이 데이터는 시설별, 시도별 자원봉사자 현황을 보여줍니다.")
 
 # 2. 로컬에 있는 CSV 파일 불러오기
-# 사용자가 제공한 파일명을 기준으로 데이터를 불러옵니다.
+# 최신 data.csv 파일을 불러옵니다.
 try:
-    file_path = '자원봉사자_현황_시설종별_시도별__20250906111540.xlsx - 데이터.csv'
+    file_path = 'data.csv'
+    # 데이터가 3번째 행(index 2)부터 시작하므로 header=2로 지정합니다.
     df = pd.read_csv(file_path, encoding='cp949', header=2)
-    # 데이터프레임 컬럼명 정리
+    # 데이터프레임 컬럼명 정리 및 불필요한 행 제거
     df.rename(columns={'시도별(1)': '시도별'}, inplace=True)
-    df = df.iloc[1:].reset_index(drop=True) # 불필요한 행 제거 및 인덱스 재설정
+    df = df.iloc[1:].reset_index(drop=True)
+    
     st.dataframe(df)
 
 except FileNotFoundError:
     st.error(f"파일을 찾을 수 없습니다: {file_path}")
-    st.write("GitHub에 파일을 업로드하고 `raw` 주소를 사용하거나, 파일을 스크립트와 같은 폴더에 저장해주세요.")
+    st.write("`data.csv` 파일을 스크립트와 같은 폴더에 저장해주세요.")
     st.stop()
 
 
@@ -33,13 +35,14 @@ st.write("전국의 자원봉사자 수 현황을 전광판 형태로 확인할 
 total_row = df.loc[df['시도별'] == '계']
 
 if not total_row.empty:
-    total_registered = total_row['등록자원봉사자'].item()
-    total_active = total_row['활동자원봉사자'].item()
+    # 데이터 타입 변환 (콤마 제거 후 정수로 변환)
+    total_registered = int(total_row['등록자원봉사자'].item().replace(',', ''))
+    total_active = int(total_row['활동자원봉사자'].item().replace(',', ''))
     
     # 두 개의 열을 구성하여 metric 표시
     col1, col2 = st.columns(2)
-    col1.metric("총 등록자원봉사자", f"{int(total_registered):,}")
-    col2.metric("총 활동자원봉사자", f"{int(total_active):,}")
+    col1.metric("총 등록자원봉사자", f"{total_registered:,} 명")
+    col2.metric("총 활동자원봉사자", f"{total_active:,} 명")
 else:
     st.warning("전체 합계('계') 데이터가 없어 metric을 표시할 수 없습니다.")
 
@@ -50,7 +53,10 @@ st.header("자원봉사 현황 차트")
 
 # 시도별 활동자원봉사자 막대 그래프
 # '계' 행을 제외하고 데이터 시각화
-city_df = df[df['시도별'] != '계']
+city_df = df[df['시도별'] != '계'].copy()
+# 활동자원봉사자 열의 데이터를 정수형으로 변환
+city_df['활동자원봉사자'] = city_df['활동자원봉사자'].str.replace(',', '').astype(int)
+
 st.markdown("##### 시도별 활동자원봉사자 현황")
 st.bar_chart(city_df, x='시도별', y='활동자원봉사자')
 
@@ -61,6 +67,9 @@ social_welfare_cols = ['아동시설', '노인시설', '장애인시설', '여�
 social_welfare_df = total_row[social_welfare_cols].T
 social_welfare_df.columns = ['활동인원']
 social_welfare_df.index.name = '시설종류'
+# 활동인원 열의 데이터를 정수형으로 변환
+social_welfare_df['활동인원'] = social_welfare_df['활동인원'].str.replace(',', '').astype(int)
+
 st.markdown("##### 사회복지 분야별 활동자원봉사자 (전국)")
 st.bar_chart(social_welfare_df)
 
@@ -92,3 +101,11 @@ if submitted:
         - **만족도:** {s}점
         - **재참여 의사:** {r}
     """)
+    # 다운로드 버튼 추가
+    csv_data = df.to_csv(index=False).encode('cp949')
+    st.download_button(
+        label="데이터 다운로드",
+        data=csv_data,
+        file_name='자원봉사자_현황.csv',
+        mime='text/csv'
+    )
