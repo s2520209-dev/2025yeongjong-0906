@@ -13,7 +13,7 @@ st.write("이 데이터는 시설별, 시도별 자원봉사자 현황을 보여
 try:
     # 깃허브 원시 파일 URL로 경로 수정
     # 자신의 깃허브 저장소 URL로 바꿔주세요!
-    file_path = 'https://github.com/s2520209-dev/2025yeongjong-0906/blob/main/data.csv' +"raw=true"
+    file_path = 'https://github.com/s2520209-dev/2025yeongjong-0906/blob/main/data.csv' +"?raw=true"
     
     # 데이터가 3번째 행(index 2)부터 시작하므로 header=2로 지정합니다.
     df = pd.read_csv(file_path, encoding='cp949', header=2)
