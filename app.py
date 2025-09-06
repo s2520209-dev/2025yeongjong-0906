@@ -10,18 +10,11 @@ st.write("이 데이터는 시설별, 시도별 자원봉사자 현황을 보여
 
 # 2. 로컬에 있는 CSV 파일 불러오기
 # 최신 data.csv 파일을 불러옵니다.
-try:
-    # 깃허브 원시 파일 URL로 경로 수정
-    # 자신의 깃허브 저장소 URL로 바꿔주세요!
-    file_path = 'https://raw.githubusercontent.com/s2520209-dev/2025yeongjong-0906/main/data.csv'
+
+file_path = 'https://github.com/s2520209-dev/2025yeongjong-0906/blob/main/data.csv'+'?raw=true'
     
-    # 데이터가 3번째 행(index 2)부터 시작하므로 header=2로 지정합니다.
-    df = pd.read_csv(file_path, encoding='cp949', header=2)
-    # 데이터프레임 컬럼명 정리 및 불필요한 행 제거
-    df.rename(columns={'시도별(1)': '시도별'}, inplace=True)
-    df = df.iloc[1:].reset_index(drop=True)
-    
-    st.dataframe(df)
+df = pd.read_csv(file_path, encoding='cp949', header=2)
+st.dataframe(df)
 
 except Exception as e:
     st.error("파일을 불러오는 중 오류가 발생했습니다.")
