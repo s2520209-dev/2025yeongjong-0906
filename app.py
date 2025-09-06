@@ -22,13 +22,7 @@ try:
     df = df.iloc[1:].reset_index(drop=True)
     
     st.dataframe(df)
-'''
-except Exception as e:
-    st.error("파일을 불러오는 중 오류가 발생했습니다.")
-    st.write(f"오류 내용: {e}")
-    st.write("GitHub 저장소의 **사용자 이름**, **저장소 이름**, **브랜치 이름**이 정확한지 확인해주세요.")
-    st.stop()
-'''
+
 
 # 3. 주요 통계 정보를 metric으로 시각화
 st.write("---")
