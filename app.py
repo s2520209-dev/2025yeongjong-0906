@@ -105,11 +105,5 @@ if submitted:
         - **만족도:** {s}점
         - **재참여 의사:** {r}
     """)
-    # 다운로드 버튼 추가
-    csv_data = df.to_csv(index=False).encode('cp949')
-    st.download_button(
-        label="데이터 다운로드",
-        data=csv_data,
-        file_name='자원봉사자_현황.csv',
-        mime='text/csv'
+
     )
