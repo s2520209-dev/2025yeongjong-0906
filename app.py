@@ -20,12 +20,11 @@ try:
     df = df.iloc[1:].reset_index(drop=True)
     
     st.dataframe(df)
-'''
+
 except Exception as e:
     st.error("파일을 불러오는 중 오류가 발생했습니다.")
     st.write(f"오류 내용: {e}")
     st.stop()
-'''
 
 # 3. 주요 통계 정보를 metric으로 시각화
 st.write("---")
