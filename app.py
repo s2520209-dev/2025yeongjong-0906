@@ -13,7 +13,7 @@ st.write("이 데이터는 시설별, 시도별 자원봉사자 현황을 보여
 try:
     # 깃허브 원시 파일 URL로 경로 수정
     # 자신의 깃허브 저장소 URL로 바꿔주세요!
-    file_path = 'https://github.com/s2520209-dev/2025yeongjong-0906/blob/main/data.csv' +"?raw=true"
+    file_path = 'https://github.com/s2520209-dev/2025yeongjong-0906/blob/main/data.csv' +'?raw=true'
     
     # 데이터가 3번째 행(index 2)부터 시작하므로 header=2로 지정합니다.
     df = pd.read_csv(file_path, encoding='cp949', header=2)
@@ -22,13 +22,13 @@ try:
     df = df.iloc[1:].reset_index(drop=True)
     
     st.dataframe(df)
-
+'''
 except Exception as e:
     st.error("파일을 불러오는 중 오류가 발생했습니다.")
     st.write(f"오류 내용: {e}")
     st.write("GitHub 저장소의 **사용자 이름**, **저장소 이름**, **브랜치 이름**이 정확한지 확인해주세요.")
     st.stop()
-
+'''
 
 # 3. 주요 통계 정보를 metric으로 시각화
 st.write("---")
